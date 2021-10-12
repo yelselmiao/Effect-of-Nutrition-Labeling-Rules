@@ -2,10 +2,15 @@ library(tidyverse)
 library(dplyr)
 library(readxl)
 library(parsedate)
+library(openxlsx)
 
 # Specify what restaurant
-restaurant_name = "The Loop Pizza Grill"
-directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
+class <- "PDF 20 or more"
+restaurant_name = "Cosi"
+#directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
+directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
+                        class, "/", 
+                        restaurant_name)
 
 # read all files within the restaurant  
 fi<-list.files(directory_path, full.names=T)
@@ -34,7 +39,7 @@ pre_clean <- function(file_list){
 
 dat <- pre_clean(dat)
 
-# Initilize the first file, let's call it period t
+# Initialize the first file, let's call it period t
 t_file <- dat[[1]]
 
 # These are items that have a match at period t + 1, we assign them ids
@@ -43,7 +48,7 @@ t_file_match <- t_file %>%
   mutate(id = row_number()) %>% 
   mutate(id = paste(restaurant_name,'_', id)) 
 
-# Start buiding the panel
+# Start building the panel
 panel <- t_file_match
 i = 2
 
@@ -70,4 +75,8 @@ while (i <= length(dat)){
     mutate(id = ifelse(is.na(id), paste(restaurant_name, '_',nrow(panel) + row_number()), id))
   i = i + 1
 }
+
+panel <- panel %>% 
+  group_by(id) %>% 
+  filter(n() > 1) 
 
