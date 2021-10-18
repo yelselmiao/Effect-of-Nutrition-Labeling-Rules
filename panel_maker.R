@@ -5,8 +5,8 @@ library(parsedate)
 library(openxlsx)
 
 # Specify what restaurant
-class <- "HTML less than 20 JING"
-restaurant_name = "Calistoga"
+class <- "HTML 20 or more JING"
+restaurant_name = "Boiling Point"
 #directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
 directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
                         class, "/", 
@@ -80,4 +80,4 @@ panel <- panel %>%
   group_by(id) %>% 
   filter(n() > 1) 
 
-# writexl::write_xlsx(panel, "~/Desktop/Calistoga_panel.xlsx")
+# writexl::write_xlsx(panel, "~/Dropbox/Restaurant Menu's shared workspace/Data/Panel Matching/Shuyi's test folder/boiling_point_panel.xlsx")
