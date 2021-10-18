@@ -5,8 +5,8 @@ library(parsedate)
 library(openxlsx)
 
 # Specify what restaurant
-class <- "PDF 20 or more"
-restaurant_name = "Cosi"
+class <- "HTML less than 20 JING"
+restaurant_name = "Calistoga"
 #directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
 directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
                         class, "/", 
@@ -61,7 +61,7 @@ while (i <= length(dat)){
     t_1_file$id[t_file_match$post_fuzzy_loc[j]] <- t_file_match$id[j]
   }
   
-  # items at t+1 that have been match to t
+  # items at t+1 that have been matched to t
   t_1_file_match <- t_1_file %>% filter(pre_fuzzy == 1)
   # update the panel with items at t + 1 that were matched at t
   common_cols <- intersect(colnames(panel), colnames(t_1_file_match))
@@ -80,3 +80,4 @@ panel <- panel %>%
   group_by(id) %>% 
   filter(n() > 1) 
 
+# writexl::write_xlsx(panel, "~/Desktop/Calistoga_panel.xlsx")
