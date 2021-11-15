@@ -76,22 +76,12 @@ while (i <= length(dat)){
                  subset(t_1_file, select = common_cols))
   
   # Now the t + 1 file will become the new t file 
-  t_file <- t_1_file %>% filter(post_fuzzy == 1)
-  # items that have matches in the next period
-  #t_file_match <- t_file %>% 
-    #mutate(id = ifelse(is.na(id), paste(restaurant_name, '_',nrow(panel) + row_number()), id))
+  # and items that have matches in the next period
+  t_file_match <- t_1_file %>% filter(post_fuzzy == 1)
   i = i + 1
 }
   
-  
 
-  
-  
-
-panel <- panel %>% 
-  group_by(id) %>% 
-  filter(n() > 1) 
-
-write.xlsx(panel, 'D:/panel_jing.xlsx', overwrite = T)
+#write.xlsx(panel, 'D:/panel_jing.xlsx', overwrite = T)
 
 
