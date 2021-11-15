@@ -5,8 +5,8 @@ library(parsedate)
 library(openxlsx)
 
 # Specify what restaurant
-class <- "HTML 20 or more JING"
-restaurant_name = "Boiling Point"
+class <- "PDF 20 or more"
+restaurant_name = "Cosi"
 #directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
 directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
                         class, "/", 
