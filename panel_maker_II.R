@@ -6,8 +6,8 @@ library(openxlsx)
 library(stringr)
 
 # Specify what restaurant
-class <- "PDF 20 or more"
-restaurant_name = "Cosi"
+class <- "HTML 20 or more JING"
+restaurant_name = "Baja Fresh"
 #directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
 directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
                         class, "/", 
@@ -32,6 +32,8 @@ for (i in 1:length(dat)){
         rename(pre_fuzzy_types = pre_fuzzy_item_types)}
 
   df <- df %>% 
+    # remove duplicate rows
+    distinct() %>% 
     mutate(id = row_number() + row_num) %>% 
     mutate(id = sprintf("%04d", id)) %>%
     mutate(id = paste0(id, '_', restaurant_name)) %>% 
