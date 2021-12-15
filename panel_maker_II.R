@@ -6,8 +6,8 @@ library(openxlsx)
 library(stringr)
 
 # Specify what restaurant
-class <- "HTML 20 or more JING"
-restaurant_name = "Baja Fresh"
+class <- "PDF 20 or more"
+restaurant_name = "Steak 'N Shake"
 #directory_path <- paste0("~/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/PDF less than 20 JING/", restaurant_name)
 directory_path = paste0("/Users/shuyitan/Dropbox/Restaurant Menu's shared workspace/Data/Data Validation/Updated Dual_way Validation/", 
                         class, "/", 
@@ -84,6 +84,6 @@ while (i <= length(dat)){
 }
   
 
-#write.xlsx(panel, 'D:/panel_jing.xlsx', overwrite = T)
+writexl::write_xlsx(panel, "~/Dropbox/Restaurant Menu's shared workspace/Data/Panel Matching/Shuyi's test folder/steak_n_shake_panel.xlsx")
 
 
