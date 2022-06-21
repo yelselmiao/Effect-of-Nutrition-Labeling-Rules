@@ -1,0 +1,182 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+rm(list = ls())
+options(show.error.locations = TRUE)
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(parsedate)
+library(openxlsx)
+library(stringr)
+```
+
+
+```{r}
+df <- read.csv('~/Downloads/pdf20more_types.csv')
+names(df)
+```
+```{r replace empty string with NA}
+df[df == "" | df == " "] <- NA
+df[df == "--"] <- NA
+df[df == "-"] <- NA
+```
+
+
+
+```{r check unconvertable entries }
+numbers_only <- function(x) !grepl("\\D", x)
+map(df[18:42], ~sum(!numbers_only(.)))
+```
+
+## Protein..g.
+```{r Protein..g.}
+df %>% 
+  select(Protein..g.) %>% 
+  filter(!numbers_only(Protein..g.)) %>% 
+  mutate(protein_num = as.numeric(Protein..g.)) %>% 
+  filter(is.na(protein_num)) 
+```
+
+
+
+
+```{r Calories}
+df %>% 
+  select(Calories) %>% 
+  filter(!numbers_only(Calories)) %>% 
+  mutate(Calories_num = as.numeric(Calories)) %>% 
+  filter(is.na(Calories_num))
+```
+
+
+```{r Calories.from.Fat}
+df %>% 
+  select(Calories.from.Fat) %>% 
+  filter(!numbers_only(Calories.from.Fat)) %>% 
+  mutate(Cff_num = as.numeric(Calories.from.Fat)) %>% 
+  filter(is.na(Cff_num))
+```
+
+
+```{r Total.Fat..g.}
+df %>% 
+  select(Total.Fat..g.) %>% 
+  filter(!numbers_only(Total.Fat..g.)) %>% 
+  mutate(tf_num = as.numeric(Total.Fat..g.)) %>% 
+  filter(is.na(tf_num))
+```
+
+
+```{r Trans.Fat..g.}
+df %>% 
+  select(Trans.Fat..g.) %>% 
+  filter(!numbers_only(Trans.Fat..g.)) %>% 
+  mutate(tran_f_num = as.numeric(Trans.Fat..g.)) %>% 
+  filter(is.na(tran_f_num))
+```
+
+
+
+```{r Saturated.Fat..g.}
+df %>% 
+  select(Saturated.Fat..g.) %>% 
+  filter(!numbers_only(Saturated.Fat..g.)) %>% 
+  mutate(sat_f_num = as.numeric(Saturated.Fat..g.)) %>% 
+  filter(is.na(sat_f_num))
+```
+
+
+
+```{r Cholesterol..mg.}
+df %>% 
+  select(Cholesterol..mg.) %>% 
+  filter(!numbers_only(Cholesterol..mg.)) %>% 
+  mutate(Chole_num = as.numeric(Cholesterol..mg.)) %>% 
+  filter(is.na(Chole_num))
+```
+```{r Sodium..mg.}
+df %>% 
+  select(Sodium..mg.) %>% 
+  filter(!numbers_only(Sodium..mg.)) %>% 
+  mutate(Sodium_num = as.numeric(Sodium..mg.)) %>% 
+  filter(is.na(Sodium_num))
+```
+
+
+```{r Total.Carbohydrate..g.}
+df %>% 
+  select(Total.Carbohydrate..g.) %>% 
+  filter(!numbers_only(Total.Carbohydrate..g.)) %>% 
+  mutate(carb_num = as.numeric(Total.Carbohydrate..g.)) %>% 
+  filter(is.na(carb_num))
+```
+
+
+```{r Dietary.Fiber..g.}
+df %>% 
+  select(Dietary.Fiber..g.) %>% 
+  filter(!numbers_only(Dietary.Fiber..g.)) %>% 
+  mutate(fiber_num = as.numeric(Dietary.Fiber..g.)) %>% 
+  filter(is.na(fiber_num))
+```
+
+```{r Sugar..g.}
+df %>% 
+  select(Sugar..g.) %>% 
+  filter(!numbers_only(Sugar..g.)) %>% 
+  mutate(sugar_num = as.numeric(Sugar..g.)) %>% 
+  filter(is.na(sugar_num))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
