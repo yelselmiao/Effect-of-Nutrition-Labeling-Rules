@@ -1,0 +1,88 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/pdf20more_types.CSV"
+full_data <- read.csv(path)
+```
+
+```{r}
+col <- full_data %>% 
+  select(Calories) 
+
+```
+
+```{r split_func}
+pattern = '/|-'
+split_func <- function(string){
+  if_split <- str_detect(string, '/|-') 
+  position <- str_locate(string, pattern = '/|-')[1,1]
+  if (!is.na(position)){
+    string_left <- unlist(str_split(string, pattern = '/|-'))[1]
+    string_right <- unlist(str_split(string, pattern = '/|-'))[2]
+  }
+  else{
+    string_left <- string
+    string_right <- string
+  }
+  return(list(string_left, string_right))
+}
+```
+
+
+```{r col_maker}
+col_maker <- function(split_res) {
+  col_lw <- split_res[[1]]
+  col_up <- split_res[[2]]
+  col_comb <- cbind(col_lw, col_up)
+  return(col_comb)
+}
+```
+
+```{r}
+col_list <- names(full_data)[18:19]
+
+test_data <- full_data[1:10, ]
+
+for (col in col_list){
+  current_col = test_data[col]
+  split_cols = col_maker(split_func(current_col))
+  colnames(split_cols) <- c(paste0(col, '_low'), paste0(col, '_up'))
+  test_data <- cbind(test_data, split_cols)
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
