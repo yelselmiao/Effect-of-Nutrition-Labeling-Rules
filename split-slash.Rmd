@@ -5,21 +5,18 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r}
-library(tidyverse)
+```{r }
+suppressPackageStartupMessages(library(tidyverse))
 ```
 
 
 ```{r}
-path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/pdf20more_types.CSV"
-full_data <- read.csv(path)
+path_1 <- "~/Dropbox/Restaurant Menu's shared workspace/Data/pdf20more_types.CSV"
+path_2 <- "~/Dropbox/Restaurant Menu's shared workspace/Data/pdf20more_types-manual-fix.CSV"
+full_data <- read.csv(path_2)
 ```
 
-```{r}
-col <- full_data %>% 
-  select(Calories) 
 
-```
 
 ```{r split_func}
 pattern = '/|-'
@@ -48,10 +45,10 @@ col_maker <- function(split_res) {
 }
 ```
 
-```{r}
-col_list <- names(full_data)[18:19]
+```{r warning=FALSE}
+col_list <- names(full_data)[18:28]
 
-test_data <- full_data[1:10, ]
+test_data <- full_data# [1:1000, ]
 
 for (col in col_list){
   current_col = test_data[col]
@@ -59,9 +56,13 @@ for (col in col_list){
   colnames(split_cols) <- c(paste0(col, '_low'), paste0(col, '_up'))
   test_data <- cbind(test_data, split_cols)
 }
+
 ```
 
 
+```{r}
+write.csv(test_data, "~/Dropbox/Restaurant Menu's shared workspace/Data/pdf20more_types_fixed.csv")
+```
 
 
 
