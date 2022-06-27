@@ -20,29 +20,35 @@ full_data <- read.csv(path_2)
 
 ```{r split_func}
 pattern = '/|-'
-split_func <- function(string){
-  if_split <- str_detect(string, '/|-') 
-  position <- str_locate(string, pattern = '/|-')[1,1]
-  if (!is.na(position)){
-    string_left <- unlist(str_split(string, pattern = '/|-'))[1]
-    string_right <- unlist(str_split(string, pattern = '/|-'))[2]
+split_func <- function(column) {
+  low_up <- tibble(low = NA, up = NA)
+  for (string in unlist(column)) {
+    if_split <- str_detect(string, '/|-')
+    position <- str_locate(string, pattern = '/|-')[1, 1]
+    if (!is.na(position)) {
+      string_left <- unlist(str_split(string, pattern = '/|-'))[1]
+      string_right <- unlist(str_split(string, pattern = '/|-'))[2]
+    }
+    else{
+      string_left <- string
+      string_right <- string
+    }
+    
+    low_up <- low_up %>% add_row(low = string_left, up = string_right)
   }
-  else{
-    string_left <- string
-    string_right <- string
-  }
-  return(list(string_left, string_right))
+  low_up <- low_up[-1, ]
+  return(low_up)
 }
 ```
 
 
 ```{r col_maker}
-col_maker <- function(split_res) {
-  col_lw <- split_res[[1]]
-  col_up <- split_res[[2]]
-  col_comb <- cbind(col_lw, col_up)
-  return(col_comb)
-}
+# col_maker <- function(split_res) {
+#   col_lw <- split_res[[1]]
+#   col_up <- split_res[[2]]
+#   col_comb <- cbind(col_lw, col_up)
+#   return(col_comb)
+# }
 ```
 
 ```{r warning=FALSE}
@@ -50,9 +56,10 @@ col_list <- names(full_data)[18:28]
 
 test_data <- full_data# [1:1000, ]
 
+
 for (col in col_list){
   current_col = test_data[col]
-  split_cols = col_maker(split_func(current_col))
+  split_cols = split_func(current_col)
   colnames(split_cols) <- c(paste0(col, '_low'), paste0(col, '_up'))
   test_data <- cbind(test_data, split_cols)
 }
