@@ -1,0 +1,168 @@
+---
+title: "Summary Statistics"
+output: github_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+
+```
+
+```{r}
+path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel0722.csv"
+full_data <- read.csv(path)
+```
+
+```{r}
+names(full_data)
+```
+```{r}
+dim(full_data)
+```
+
+```{r}
+nutrient_col <- c(
+  "Calories",
+  "Calories.from.Fat",
+  "Total.Fat..g.",
+  "Saturated.Fat..g.",
+  "Trans.Fat..g.", 
+  "Cholesterol..mg.",
+  "Sodium..mg.",
+  "Total.Carbohydrate..g.", 
+  "Dietary.Fiber..g.",
+  "Sugar..g.",
+  "Protein..g."
+) 
+```
+
+```{r}
+# "html_less_20" "html_more_20" "pdf_more_20"  "pdf_less_20" 
+unique(full_data$foldertype)
+
+# "chicken"                     "lsr/burger"                  "family dining"              
+#  [4] "bakery-cafe"                 "lsr/ sandwich"               "pizza"                      
+#  [7] "lsr/mexican"                 "fast-casual"                 "lsr/sandwich"               
+# [10] "lsr/chinese"                 "beverage- snack"             "chinese"                    
+# [13] "family dining/buffet"        "casual dining"               "lsr/seafood"                
+# [16] "tbd"                         "lsr/ barbecue"               "lsr/italian"                
+# [19] "family dining/grill- buffet" "lsr/hot dog"   
+unique(full_data$segment)
+
+# 143 restaurants in total 
+length(unique(full_data$Restaurant.Name))
+```
+
+```{r}
+# policy date: 'May 7th, 2018'
+policy_date <- '2018/5/7'
+
+
+# attach the year column 
+full_data <- full_data %>% 
+  mutate(file_year = year(as.Date(file_date)), 
+         policy = ifelse(as.Date(file_date) > policy_date, '1', '0'))
+
+data <- full_data %>% 
+  select(
+  "policy", 
+  "file_date", 
+  #"file_year", 
+  "Restaurant.Name", 
+  "foldertype", 
+  "segment", 
+  "Calories",
+  "Calories.from.Fat",
+  "Total.Fat..g.",
+  "Saturated.Fat..g.",
+  "Trans.Fat..g.", 
+  "Cholesterol..mg.",
+  "Sodium..mg.",
+  "Total.Carbohydrate..g.", 
+  "Dietary.Fiber..g.",
+  "Sugar..g.",
+  "Protein..g.") 
+```
+
+```{r}
+pdf_less_20_res <- data %>% 
+  filter(foldertype == 'pdf_less_20')
+
+
+pdf_less_20_res %>% 
+  mutate_at(nutrient_col, as.numeric) %>% 
+  group_by(Restaurant.Name, file_date) %>%
+  summarise_at(nutrient_col, mean, na.rm = TRUE) %>% 
+    #mutate(policy_num = as.numeric(policy)) %>%
+  ungroup() %>%
+  mutate(file_date = as.Date(file_date)) %>% 
+  ggplot(aes(x = file_date, y = Calories, color = Restaurant.Name)) + 
+  geom_point() + 
+  geom_line() + 
+  geom_vline(xintercept = as.Date(policy_date))
+  
+```
+
+
+```{r}
+html_less_20_res <- data %>% 
+  filter(foldertype == 'html_less_20')
+
+
+html_less_20_res %>% 
+  mutate_at(nutrient_col, as.numeric) %>% 
+  group_by(Restaurant.Name, file_date) %>%
+  summarise_at(nutrient_col, mean, na.rm = TRUE) %>% 
+    #mutate(policy_num = as.numeric(policy)) %>%
+  ungroup() %>%
+  mutate(file_date = as.Date(file_date)) %>% 
+  ggplot(aes(x = file_date, y = Calories, color = Restaurant.Name)) + 
+  geom_point() + 
+  geom_line() + 
+  geom_vline(xintercept = as.Date(policy_date)) + 
+  ggtitle('HTML < 20: Calories')
+  
+```
+```{r fig.width=5, fig.height=3}
+html_gt_20_res <- data %>% 
+  filter(foldertype == 'html_more_20')
+
+
+html_gt_20_res %>% 
+  mutate_at(nutrient_col, as.numeric) %>% 
+  group_by(Restaurant.Name, file_date) %>%
+  summarise_at(nutrient_col, mean, na.rm = TRUE) %>% 
+    #mutate(policy_num = as.numeric(policy)) %>%
+  ungroup() %>%
+  mutate(file_date = as.Date(file_date)) %>% 
+  ggplot(aes(x = file_date, y = Calories, color = Restaurant.Name)) + 
+  geom_point() + 
+  geom_line() + 
+  geom_vline(xintercept = as.Date(policy_date)) + 
+  ggtitle('HTML > 20: Calories')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
