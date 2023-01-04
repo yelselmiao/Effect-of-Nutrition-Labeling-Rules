@@ -29,6 +29,12 @@ df[df == "--"] <- NA
 df[df == "-"] <- NA
 ```
 
+```{r}
+# ignore drink and catering 
+df %>% 
+  group_by(ItemTypeCategory) %>% 
+  tally()
+```
 
 
 ```{r check unconvertable entries }
@@ -36,10 +42,16 @@ numbers_only <- function(x) !grepl("\\D", x)
 map(df[18:42], ~sum(!numbers_only(.)))
 ```
 
+
+
+```{r}
+df 
+```
+
 ## Protein..g.
 ```{r Protein..g.}
 df %>% 
-  select(Protein..g.) %>% 
+  select(Restaurant.Name, Protein..g.) %>% 
   filter(!numbers_only(Protein..g.)) %>% 
   mutate(protein_num = as.numeric(Protein..g.)) %>% 
   filter(is.na(protein_num)) 
@@ -53,7 +65,8 @@ df %>%
   select(Calories) %>% 
   filter(!numbers_only(Calories)) %>% 
   mutate(Calories_num = as.numeric(Calories)) %>% 
-  filter(is.na(Calories_num))
+  filter(is.na(Calories_num)) %>% 
+  mutate(calor)
 ```
 
 
@@ -68,29 +81,29 @@ df %>%
 
 ```{r Total.Fat..g.}
 df %>% 
-  select(Total.Fat..g.) %>% 
+  # select(Item_Name,Total.Fat..g.) %>% 
   filter(!numbers_only(Total.Fat..g.)) %>% 
   mutate(tf_num = as.numeric(Total.Fat..g.)) %>% 
-  filter(is.na(tf_num))
+  filter(is.na(tf_num), Restaurant.Name == 'buffalo wild wings') 
 ```
 
 
 ```{r Trans.Fat..g.}
 df %>% 
-  select(Trans.Fat..g.) %>% 
+  # select(Trans.Fat..g.) %>% 
   filter(!numbers_only(Trans.Fat..g.)) %>% 
   mutate(tran_f_num = as.numeric(Trans.Fat..g.)) %>% 
-  filter(is.na(tran_f_num))
+  filter(is.na(tran_f_num), Restaurant.Name == 'buffalo wild wings')
 ```
 
 
 
 ```{r Saturated.Fat..g.}
 df %>% 
-  select(Saturated.Fat..g.) %>% 
+  # select(Saturated.Fat..g.) %>% 
   filter(!numbers_only(Saturated.Fat..g.)) %>% 
   mutate(sat_f_num = as.numeric(Saturated.Fat..g.)) %>% 
-  filter(is.na(sat_f_num))
+  filter(is.na(sat_f_num), Restaurant.Name == 'buffalo wild wings')
 ```
 
 
@@ -113,10 +126,10 @@ df %>%
 
 ```{r Total.Carbohydrate..g.}
 df %>% 
-  select(Total.Carbohydrate..g.) %>% 
+  #select(Total.Carbohydrate..g.) %>% 
   filter(!numbers_only(Total.Carbohydrate..g.)) %>% 
   mutate(carb_num = as.numeric(Total.Carbohydrate..g.)) %>% 
-  filter(is.na(carb_num))
+  filter(is.na(carb_num), Restaurant.Name == 'buffalo wild wings')
 ```
 
 
