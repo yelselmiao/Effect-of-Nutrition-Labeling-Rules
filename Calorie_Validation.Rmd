@@ -1,0 +1,67 @@
+---
+title: "Calorie Validation"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+
+```
+
+```{r}
+path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel202209_lowercase.csv"
+full_data <- read.csv(path,stringsAsFactors=FALSE, fileEncoding="latin1")
+```
+
+
+```{r}
+str(full_data)
+```
+# Validation of Calories
+
+total fat + protein + sugar + carb算出实际calory，
+1g protein = 4 calories
+1g of fat has 9 calories
+1g of sugar = 4 calories
+1g of carb = 4 calories
+
+```{r}
+cal_vali_data <- full_data %>% 
+  mutate(protein_g_low = as.numeric(protein_g_low), 
+         total_fat_g_low = as.numeric(total_fat_g_low), 
+         sugar_g_low = as.numeric(sugar_g_low), 
+         total_carbohydrate_g_low = as.numeric(total_carbohydrate_g_low), 
+         protein_g_up = as.numeric(protein_g_up), 
+         total_fat_g_up = as.numeric(total_fat_g_up), 
+         sugar_g_up = as.numeric(sugar_g_up), 
+         total_carbohydrate_g_up = as.numeric(total_carbohydrate_g_up), 
+         calories_low = as.numeric(calories_low), 
+         calories_up = as.numeric(calories_up)
+         ) %>% 
+  mutate(cal_low_validate = protein_g_low*4 + total_fat_g_low*9 + sugar_g_low*4 + total_carbohydrate_g_low*4, 
+         cal_up_validate = protein_g_up*4 + total_fat_g_up*9 + sugar_g_up*4 + total_carbohydrate_g_up*4) %>%  
+  mutate(cal_low_validate = as.numeric(cal_low_validate), 
+         cal_up_validate = as.numeric(cal_up_validate)) %>% 
+  mutate(cal_flag = ifelse(cal_low_validate > calories_low | cal_up_validate > calories_up, TRUE, FALSE)) %>% 
+  mutate(low_cal_diff = calories_low - cal_low_validate,  
+         up_cal_diff = calories_up - cal_up_validate) 
+   
+```
+
+```{r}
+write.csv(cal_vali_data, "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel202209_cal_validation.csv")
+  
+```
+
+
+```{r}
+cal_vali_data %>% 
+  filter(cal_flag == TRUE) %>% ›
+  select(cal_low_validate, cal_up_validate, calories_low, calories_up)
+```
+
+
+
