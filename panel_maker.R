@@ -43,10 +43,14 @@ dat <- pre_clean(dat)
 t_file <- dat[[1]]
 
 # These are items that have a match at period t + 1, we assign them ids
-t_file_match <- t_file %>% 
-  filter(post_fuzzy == 1) %>% 
-  mutate(id = row_number()) %>% 
-  mutate(id = paste(restaurant_name,'_', id)) 
+# t_file_match <- t_file %>% 
+#   filter(post_fuzzy == 1) %>% 
+#   mutate(id = row_number()) %>% 
+#   mutate(id = paste(restaurant_name,'_', id)) 
+
+# Assign 
+
+
 
 # Start building the panel
 panel <- t_file_match
