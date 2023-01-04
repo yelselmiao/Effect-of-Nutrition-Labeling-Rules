@@ -1,0 +1,199 @@
+---
+title: "Table Reproduction"
+output: github_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+This notebook is to reproduce the tables from STATA codes
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(forcats))
+```
+
+```{r}
+path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel202210.csv"
+full_panel_data <-read.csv(path)
+
+names(full_panel_data)
+
+unique(full_panel_data$file_date)
+
+```
+
+```{r tb3}
+policy_date <- as.Date('2018-05-07')
+
+
+full_panel_data <- full_panel_data %>%  
+  mutate_at(vars(38:59), as.numeric) %>% 
+  mutate(file_date = as.Date(file_date, '%m/%d/%Y')) %>% 
+  mutate(policy_pre_or_post = ifelse(file_date > policy_date, 0, 1)) %>% 
+  mutate(policy_pre_or_post = as.factor(policy_pre_or_post)) 
+
+  
+
+mean_tbl <- full_panel_data %>% 
+  filter(foldertype %in% c('pdf_more_20', 'html_more_20')) %>%  
+  group_by(policy_pre_or_post) %>% 
+  summarise(across(c( "calories_low",
+    "calories_up",
+    "calories_from_fat_low",
+    "calories_from_fat_up",
+    "total_fat_g_low",
+    "total_fat_g_up",
+    "saturated_fat_g_low",
+    "saturated_fat_g_up",
+    "trans_fat_g_low",
+    "trans_fat_g_up",
+    "cholesterol_mg_low",
+    "cholesterol_mg_up",
+    "sodium_mg_low",
+    "sodium_mg_up",
+    "total_carbohydrate_g_low",
+    "total_carbohydrate_g_up" ,
+    "dietary_fiber_g_low",
+    "dietary_fiber_g_up",
+    "sugar_g_low",
+    "sugar_g_up",
+    "protein_g_low",
+    "protein_g_up"), ~ mean(.x, na.rm = TRUE)))
+
+
+sd_tbl <- full_panel_data %>% 
+  filter(foldertype %in% c('pdf_more_20', 'html_more_20')) %>%  
+  group_by(policy_pre_or_post) %>% 
+  summarise(across(c( "calories_low",
+    "calories_up",
+    "calories_from_fat_low",
+    "calories_from_fat_up",
+    "total_fat_g_low",
+    "total_fat_g_up",
+    "saturated_fat_g_low",
+    "saturated_fat_g_up",
+    "trans_fat_g_low",
+    "trans_fat_g_up",
+    "cholesterol_mg_low",
+    "cholesterol_mg_up",
+    "sodium_mg_low",
+    "sodium_mg_up",
+    "total_carbohydrate_g_low",
+    "total_carbohydrate_g_up" ,
+    "dietary_fiber_g_low",
+    "dietary_fiber_g_up",
+    "sugar_g_low",
+    "sugar_g_up",
+    "protein_g_low",
+    "protein_g_up"), ~ sd(.x, na.rm = TRUE)))
+
+
+
+tb3 <- as.data.frame(cbind(t(mean_tbl), t(sd_tbl)))
+colnames(tb3) <- c('pre mean', 'post mean', 'pre sd', 'post sd')
+tb3
+```
+
+```{r tb4}
+tb4_sd <- full_panel_data %>%
+  filter(foldertype %in% c('pdf_more_20', 'html_more_20')) %>%
+  mutate(itemtype_category = as.factor(itemtype_category)) %>%
+  group_by(itemtype_category) %>%
+  summarise(across(
+    c(
+      "calories_low",
+      "calories_up",
+      
+      "total_fat_g_low",
+      "total_fat_g_up",
+      "sodium_mg_low",
+      "sodium_mg_up",
+      "sugar_g_low",
+      "sugar_g_up"
+    ),
+    ~ sd(.x, na.rm = TRUE)
+  ))
+
+
+tb4_mean <- full_panel_data %>%
+  filter(foldertype %in% c('pdf_more_20', 'html_more_20')) %>%
+  mutate(itemtype_category = as.factor(itemtype_category)) %>%
+  group_by(itemtype_category) %>%
+  summarise(across(
+    c(
+      "calories_low",
+      "calories_up",
+      
+      "total_fat_g_low",
+      "total_fat_g_up",
+      "sodium_mg_low",
+      "sodium_mg_up",
+      "sugar_g_low",
+      "sugar_g_up"
+    ),
+    ~ mean(.x, na.rm = TRUE)
+  ))
+
+tb4_sd <- as.data.frame(t(tb4_sd))
+
+tb4_mean <-  as.data.frame(t(tb4_mean))
+
+colnames(tb4_sd) <- c(
+  "Appetizers/Sides",
+  "Entrées",
+  "Dessert/Baked_Goods",
+  "Drinks/Catering/Unknown",
+  "Kids",
+  "Toppings/Sauces",
+  "Individual Ingredients"
+)
+
+
+colnames(tb4_mean) <- c(
+  "Appetizers/Sides",
+  "Entrées",
+  "Dessert/Baked_Goods",
+  "Drinks/Catering/Unknown",
+  "Kids",
+  "Toppings/Sauces",
+  "Individual Ingredients"
+)
+  
+  
+(tb4_sd = tb4_sd[-1,])
+(tb4_mean =  tb4_mean[-1,])
+
+tb4_sd %>% 
+  mutate_if(is.character, as.numeric) %>% 
+  mutate_if()
+```
+
+bysort restaurantname: egen min_TIME=min(TIME)
+sort id calories TIME 
+by id calories: gen dup= cond(_N==1,0,_n)
+gen Change=0
+replace Change=1 if dup==1|dup==0
+
+Items which are present in both the current period and a subsequent period with no changes to their calorie content from the previous period.
+```{r}
+names(full_panel_data)
+
+
+full_panel_data %>% 
+  group_by(policy_pre_or_post) %>% 
+  arrange(file_date)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
