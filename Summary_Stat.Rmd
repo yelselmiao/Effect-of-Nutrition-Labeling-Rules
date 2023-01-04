@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(lubridate))
 ```
 
 ```{r}
-path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel0722.csv"
+path <- "~/Dropbox/Restaurant Menu's shared workspace/Data/final_panel202208.csv"
 full_data <- read.csv(path)
 ```
 
